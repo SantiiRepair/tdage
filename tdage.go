@@ -1,15 +1,12 @@
 package tdage
 
 import (
-	"encoding/json"
 	"fmt"
 	"math"
-	"os"
 	"time"
 )
 
 type AgeData struct {
-	data  map[string]int64
 	minID int64
 	maxID int64
 }
@@ -20,21 +17,9 @@ type Result struct {
 }
 
 func NewAgeData() *AgeData {
-	return &AgeData{
-		data: make(map[string]int64),
-	}
-}
+	a := &AgeData{}
 
-func (a *AgeData) LoadAges(filePath string) error {
-	fileData, err := os.ReadFile(filePath)
-	if err != nil {
-		return err
-	}
-	if err := json.Unmarshal(fileData, &a.data); err != nil {
-		return err
-	}
-
-	for k := range a.data {
+	for k := range ages {
 		id := parseID(k)
 		if a.minID == 0 || id < a.minID {
 			a.minID = id
@@ -43,7 +28,8 @@ func (a *AgeData) LoadAges(filePath string) error {
 			a.maxID = id
 		}
 	}
-	return nil
+
+	return a
 }
 
 func parseID(s string) int64 {
@@ -52,23 +38,24 @@ func parseID(s string) int64 {
 	return id
 }
 
-func (a *AgeData) GetDateAsDatetime(v int64) (int, time.Time) {
-	if v < a.minID {
-		return -1, time.Unix(a.data[fmt.Sprintf("%d", a.minID)]/1000, 0)
-	} else if v > a.maxID {
-		return 1, time.Unix(a.data[fmt.Sprintf("%d", a.maxID)]/1000, 0)
+func (a *AgeData) GetDateAsDatetime(f int64) (int, time.Time) {
+	if f < a.minID {
+		return -1, time.Unix(ages[fmt.Sprintf("%d", a.minID)]/1000, 0)
+	} else if f > a.maxID {
+		return 1, time.Unix(ages[fmt.Sprintf("%d", a.maxID)]/1000, 0)
 	}
 
 	lowerID := a.minID
-	for k, v := range a.data {
+	for k, v := range ages {
 		uid := parseID(k)
-		if v <= uid {
-			lage := float64(a.data[fmt.Sprintf("%d", lowerID)]) / 1000
+		if f <= uid {
+			lage := float64(ages[fmt.Sprintf("%d", lowerID)]) / 1000
 			uage := float64(v) / 1000
-			idRatio := float64(v-lowerID) / float64(uid-lowerID)
+			idRatio := float64(f-lowerID) / float64(uid-lowerID)
 			midDate := math.Floor((idRatio * (uage - lage)) + lage)
 			return 0, time.Unix(int64(midDate), 0)
 		}
+
 		lowerID = uid
 	}
 

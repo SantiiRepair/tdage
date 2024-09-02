@@ -7,7 +7,7 @@ import (
 func TestGetDateAsJSON(t *testing.T) {
 	pool := NewAgeData()
 
-	userId := int64(1027242622)
+	userId := int64(5142525308)
 	r, err := pool.GetDateAsJSON(userId)
 	if err != nil {
 		t.Fatalf("Error getting date: %v", err)
