@@ -16,7 +16,7 @@ type Result struct {
 	Date   time.Time `json:"date"`
 }
 
-func NewAgeData() *AgeData {
+func NewPool() *AgeData {
 	a := &AgeData{}
 
 	for k := range ages {
@@ -38,20 +38,29 @@ func parseID(s string) int64 {
 	return id
 }
 
-func (a *AgeData) GetDateAsDatetime(f int64) (int, time.Time) {
-	if f < a.minID {
+// Calculates the creation date based on the provided integer value.
+//
+// It returns a tuple containing the result of the calculation and the date of creation as a time.Time object.
+//
+// Parameters:
+//   v: An integer representing the value used to determine the creation date.
+//
+// Returns:
+//   A tuple containing the result of the calculation and the date of creation as a time.Time object.
+func (a *AgeData) GetAsDatetime(v int64) (int, time.Time) {
+	if v < a.minID {
 		return -1, time.Unix(ages[fmt.Sprintf("%d", a.minID)]/1000, 0)
-	} else if f > a.maxID {
+	} else if v > a.maxID {
 		return 1, time.Unix(ages[fmt.Sprintf("%d", a.maxID)]/1000, 0)
 	}
 
 	lowerID := a.minID
-	for k, v := range ages {
-		uid := parseID(k)
-		if f <= uid {
+	for x, y := range ages {
+		uid := parseID(x)
+		if v <= uid {
 			lage := float64(ages[fmt.Sprintf("%d", lowerID)]) / 1000
-			uage := float64(v) / 1000
-			idRatio := float64(f-lowerID) / float64(uid-lowerID)
+			uage := float64(y) / 1000
+			idRatio := float64(v-lowerID) / float64(uid-lowerID)
 			midDate := math.Floor((idRatio * (uage - lage)) + lage)
 			return 0, time.Unix(int64(midDate), 0)
 		}
@@ -62,8 +71,18 @@ func (a *AgeData) GetDateAsDatetime(f int64) (int, time.Time) {
 	return 0, time.Time{}
 }
 
-func (a *AgeData) GetDateAsJSON(v int64) (Result, error) {
-	s, d := a.GetDateAsDatetime(v)
+// GetDate calculates the creation date based on the provided integer value.
+//
+// It returns a Result containing the status of the date comparison and the corresponding date.
+//
+// Parameters:
+//   v: An integer representing the value used to determine the creation date.
+//
+// Returns:
+//   A Result struct containing the status of the comparison ("older_than", "newer_than", or "aprox")
+//   and the date as a time.Time object, along with an error if applicable.
+func (a *AgeData) GetDate(v int64) (Result, error) {
+	s, d := a.GetAsDatetime(v)
 	var status string
 	switch s {
 	case -1:
