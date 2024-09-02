@@ -16,6 +16,14 @@ type Result struct {
 	Date   time.Time `json:"date"`
 }
 
+// NewPool creates and returns a new instance of AgeData.
+//
+// This function initializes a new AgeData object and calculates the
+// minimum and maximum ID values from a dataset called `ages`.
+//
+// Returns:
+//   A pointer to a new instance of AgeData, with the minID and maxID
+//   fields set according to the IDs found in the dataset.
 func NewPool() *AgeData {
 	a := &AgeData{}
 
