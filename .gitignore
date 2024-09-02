@@ -1,0 +1,30 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go workspace files
+*.test
+*.out
+*.prof
+
+# Dependency directories
+/vendor/
+Gopkg.lock
+Gopkg.toml
+
+# IDE and editor files
+*.idea/
+*.vscode/
+*.swp
+*.swo
+*.DS_Store
+
+# Coverage files
+*.cov
+
+# Build artifacts
+/build/
+bin/
