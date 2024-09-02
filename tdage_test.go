@@ -8,16 +8,13 @@ func TestGetDateAsJSON(t *testing.T) {
 	pool := NewPool()
 
 	userId := int64(5142525308)
-	r, err := pool.GetDate(userId)
-	if err != nil {
-		t.Fatalf("Error getting date: %v", err)
-	}
+	result := pool.GetDate(userId)
 
-	if r.Status == "" {
+	if result.Status == "" {
 		t.Error("Expected non-empty status")
 	}
 
-	if r.Date.IsZero() {
+	if result.Date.IsZero() {
 		t.Error("Expected a valid date")
 	}
 }

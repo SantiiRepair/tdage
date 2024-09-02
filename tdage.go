@@ -94,7 +94,7 @@ func (a *AgeData) GetAsDatetime(v int64) (int, time.Time) {
 //
 //	A Result struct containing the status of the comparison ("older_than", "newer_than", or "aprox")
 //	and the date as a time.Time object, along with an error if applicable.
-func (a *AgeData) GetDate(v int64) (Result, error) {
+func (a *AgeData) GetDate(v int64) Result {
 	s, d := a.GetAsDatetime(v)
 	var status string
 	switch s {
@@ -106,5 +106,5 @@ func (a *AgeData) GetDate(v int64) (Result, error) {
 		status = "aprox"
 	}
 
-	return Result{Status: status, Date: d}, nil
+	return Result{Status: status, Date: d}
 }
