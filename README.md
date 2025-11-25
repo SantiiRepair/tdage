@@ -17,7 +17,7 @@ func main() {
 	pool := tdage.NewPool()
 	userId := int64(1027242622)
 	result := pool.GetDate(userId)
-    	date := fmt.Sprintf("%02d/%d", result.Date.Month(), r.Date.Year())
+    date := fmt.Sprintf("%02d/%d", result.Date.Month(), r.Date.Year())
 	fmt.Printf("%d: %s %s", userId, result.Status, date)
 }
 ```
